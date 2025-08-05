@@ -4,11 +4,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('search-input');
     const searchResultsContainer = document.getElementById('search-results');
 
-    // --- Bungie.net APIの設定 ---
-    // 重要: 以下のAPIキーを、ご自身で https://www.bungie.net/en/Application から取得したものに置き換えてください。
-    const API_KEY = 'YOUR_API_KEY_HERE';
-    const API_BASE_URL = 'https://www.bungie.net/Platform';
-
     /**
      * フォームの送信イベントを処理し、Bungie.net APIを呼び出します。
      * @param {Event} event - フォームの送信イベント
@@ -22,10 +17,17 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // APIキーが設定されているかチェック
-        if (API_KEY === 'YOUR_API_KEY_HERE') {
-            alert('警告: Bungie.net APIキーが設定されていません。js/main.js ファイルを編集してください。');
-            searchResultsContainer.innerHTML = '<p style="color: red;">APIキーが設定されていません。アプリケーションを正しく動作させるには、Bungie.netでAPIキーを取得し、`js/main.js`ファイルに設定する必要があります。</p>';
+        // 設定ファイルが読み込まれているか、APIキーが設定されているかチェック
+        if (typeof window.BUNGIE_API_CONFIG === 'undefined' || !window.BUNGIE_API_CONFIG.API_KEY) {
+            alert('警告: API設定ファイル(js/config.js)が読み込まれていないか、APIキーが設定されていません。');
+            searchResultsContainer.innerHTML = '<p style="color: red;">API設定が不完全です。`js/config.js`を確認してください。</p>';
+            return;
+        }
+
+        // APIキーがデフォルト値のままかチェック
+        if (window.BUNGIE_API_CONFIG.API_KEY === 'YOUR_API_KEY_HERE') {
+            alert('警告: Bungie.net APIキーが設定されていません。js/config.js ファイルを編集してください。');
+            searchResultsContainer.innerHTML = '<p style="color: red;">APIキーが設定されていません。アプリケーションを正しく動作させるには、Bungie.netでAPIキーを取得し、`js/config.js`ファイルに設定する必要があります。</p>';
             return;
         }
 
@@ -33,15 +35,15 @@ document.addEventListener('DOMContentLoaded', () => {
         searchResultsContainer.innerHTML = '<p>検索中...</p>';
 
         try {
-            // Bungie.net APIのエンドポイントを構築
+            // Bungie.net APIのエンドポイントを構築 (設定ファイルの値を使用)
             // DestinyInventoryItemDefinition は武器、防具、パークなど様々なアイテムを含みます
-            const endpoint = `${API_BASE_URL}/Destiny2/Armory/Search/DestinyInventoryItemDefinition/${encodeURIComponent(searchTerm)}/`;
+            const endpoint = `${window.BUNGIE_API_CONFIG.API_BASE_URL}/Destiny2/Armory/Search/DestinyInventoryItemDefinition/${encodeURIComponent(searchTerm)}/`;
 
             // fetch APIを使ってリクエストを送信
             const response = await fetch(endpoint, {
                 method: 'GET',
                 headers: {
-                    'X-API-Key': API_KEY
+                    'X-API-Key': window.BUNGIE_API_CONFIG.API_KEY
                 }
             });
 
