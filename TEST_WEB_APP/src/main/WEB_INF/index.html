@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Destiny 2 武器・パーク検索</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <h1>Destiny 2 武器・パーク検索サイト</h1>
+    </header>
+
+    <main>
+        <div class="main-content">
+            <section class="search-container">
+                <h2>検索フォーム</h2>
+                <form id="search-form">
+                    <input type="text" id="search-input" placeholder="武器名やパーク名を入力..." required>
+                    <button type="submit">検索</button>
+                </form>
+            </section>
+    
+            <section class="results-container">
+                <h2>検索結果</h2>
+                <div id="search-results">
+                    <!-- ここに検索結果が動的に表示されます -->
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <p>Powered by Bungie.net API</p>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
